@@ -1,33 +1,62 @@
-import { submitPost, deleteOnClickPost} from './view-controller.js';
+import { submitPost, deleteOnClickPost, editOnClickPost, submitLike} from './view-controller.js';
 import { signOutOnClick } from './view-controller.js';
 
 const itemPost = (objPost) => {
   const liElem = document.createElement('li');
+  liElem.classList.add("wall-post");
   liElem.innerHTML = `
-  <span>
-    <textarea disabled>${objPost.comment}</textarea>
-  </span>
-  <button id ="btn-delete-${objPost.id}">Eliminar</button>
+
+  <textarea id="to-edit-${objPost.id}" disabled>${objPost.comment}</textarea>
+  <fieldset>
+    <label id="likes"><img src="imgs/paws.png" alt="like"/>${objPost.reaction}</label>
+    <button id ="btn-like-${objPost.id}" class = "like-btn">Me gusta</button>
+  </fieldset>
+  <fieldset>
+    <button id ="btn-edit-${objPost.id}" class = "button edit-btn">Editar</button>
+    <button id ="btn-delete-${objPost.id}" class = "button delete-btn color-white">Eliminar</button>
+    <button id ="btn-save-edit" class= "button save-post">Guardar</button>
+  </fieldset>  
+  
+
   `;
   liElem.querySelector(`#btn-delete-${objPost.id}`)
   .addEventListener( 'click', () => deleteOnClickPost(objPost));
+  const editBtn = liElem.querySelector(`#btn-edit-${objPost.id}`);
+  const saveEdit = liElem.querySelector('#btn-save-edit');
+  const btnLike = liElem.querySelector(`#btn-like-${objPost.id}`);
+  const text = liElem.querySelector(`#to-edit-${objPost.id}`);
+  editBtn.addEventListener( 'click', () => {
+   text.disabled = false;
+   liElem.querySelector(`#btn-save-edit`).style.display = 'block';
+  });
+  saveEdit.addEventListener( 'click', () => {
+    text.disabled = true;
+    editOnClickPost(objPost.id, text.value);
+    liElem.querySelector(`#btn-save-edit`).style.display = 'none'; 
+  });
+  btnLike.addEventListener( 'click', () => {
+    submitLike(objPost, objPost.reaction += 1 )
+  } )
   return liElem;
 }
 
 export const home = (posts) => {
     const divElem = document.createElement('div');
+    divElem.classList.add("section");
     const viewHome = `
     <header class="menu-arriba color">
         <img class="" src="imgs/Logo.png" alt="home">
     </header>
     <section>
       <form action="">
-        <textarea name="" id="post" placeholder="Escribe aquí..." cols="80" rows="8"></textarea>
-        <select class="button button1">
-          <option value="amigos">Amigos</option>
-          <option value="privado">Privado</option>
-        </select>
-        <button id="button-post" class="button button2">Publicar</button>
+        <textarea name="" id="post" placeholder="¿Qué estás pensando?" cols="80" rows="8"></textarea>
+        <fieldset>
+          <select id="privacity" class="button select-btn">
+            <option id="public" value="publico">Público</option>
+            <option id="private" value="privado">Privado</option>
+          </select>
+          <button id="button-post" class="button sign-post-btn color-white">Publicar</button>    
+        </fieldset>
       </form>
         <section>
           <ul id="post-list">
@@ -48,11 +77,9 @@ export const home = (posts) => {
     posts.forEach( post => {
       ul.appendChild( itemPost(post));
     });
-    buttonaddPost.addEventListener( 'click', e =>{ 
-      e.preventDefault();
+    buttonaddPost.addEventListener( 'click', () =>{ 
      submitPost()});
-    buttonSignOut.addEventListener( 'click', e =>{ 
-      e.preventDefault();
+    buttonSignOut.addEventListener( 'click', () =>{ 
     signOutOnClick()});
     return divElem;
    }

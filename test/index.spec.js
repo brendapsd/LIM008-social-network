@@ -16,12 +16,9 @@ global.firebase = MockFirebaseSdk(
 );
 
 // iniciando tests
-import { logIn, signUp } from '../src/lib/controller';
+import { logIn, signUp, googleLogIn, signOut } from '../src/lib/controller';
 
 describe('logIn', () => {
-  it('debería ser una función', () => {
-    expect(typeof logIn).toBe('function');
-  });
   it('deberia verificar que el usuario exista en la base de datos', ()=>{
     return logIn('brenda.sd.15@gmail.com', '123123')
       .then((user)=>{
@@ -31,8 +28,11 @@ describe('logIn', () => {
 });
 
 describe('signUp', () => {
-  it('debería ser una función', () => {
-    expect(typeof signUp).toBe('function');
+  it('Debería poder registrar en la base de datos de firebase', () => {
+    return signUp('brenda.sd.15@gmail.com', '123123')
+      .then((user) => {
+        expect(user.email).toBe('brenda.sd.15@gmail.com')
+      })
   });
   it('Debería poder registrar en la base de datos de firebase', () => {
     return signUp('brenda.sd.15@gmail.com', '123123')
@@ -41,11 +41,21 @@ describe('signUp', () => {
       })
   });
 });
-/* describe('lista de notas', () => {
-  it('Debería poder iniciar sesion', () => {
-    return logIn('brenda.sd.15@gmail.com', '123123')
-      .then((user) => {
-        expect(user.email).toBe('brenda.sd.15@gmail.com')
+
+describe('googleLogIn', () => {
+  it('Debería poder iniciar sesion con Google', () => {
+    return googleLogIn()
+      .then(() => {
+        expect('').toBe('')
       })
-  }); */
-// })
+  });
+});
+
+describe('signOut', () =>{
+  it('Deberia poder cerrar sesion', () =>{
+    return signOut()
+    .then ((user) => {
+      expect(user).toBe(undefined)
+    })
+  })
+})

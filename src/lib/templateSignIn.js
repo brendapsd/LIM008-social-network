@@ -1,7 +1,7 @@
 import { signInOnSubmit, signInWithGoogle } from './view-controller.js';
 
 export const pageSignIn = () => {
-    const formElem = document.createElement('form');
+    const formElem = document.createElement('div');
     const formSignIn = `
                         <img class="logo" src="imgs/Logo.png" alt="pets">
                         <section class="inputs-buttons-img">
@@ -17,17 +17,15 @@ export const pageSignIn = () => {
                             <p>¿No tienes cuenta? <a id="registrate" href="#/signup">Regístrate</a></p>  
                         </div>
                         </section>
-                    `
+                    `;
     
     formElem.classList.add('login')
     formElem.innerHTML = formSignIn;
     const btnSignIn = formElem.querySelector('#btn-log-in');
     const btnSignInWithGoogle = formElem.querySelector('#google-button');
-    btnSignIn.addEventListener( 'click', e => {
-        e.preventDefault();
+    btnSignIn.addEventListener( 'click', () => {
         signInOnSubmit()});
-    btnSignInWithGoogle.addEventListener( 'click', e => {
-        e.preventDefault();
+    btnSignInWithGoogle.addEventListener( 'click', () => {
         signInWithGoogle()});
      return formElem; 
   };
